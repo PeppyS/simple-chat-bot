@@ -1,0 +1,9 @@
+.gcloudignore
+.idea
+
+bin/personal
+
+venv
+__pycache__
+
+bot_config.json

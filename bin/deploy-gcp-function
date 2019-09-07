@@ -1,0 +1,22 @@
+#!/bin/bash
+
+if [ -z "$FUNCTION_NAME" ]; then
+  echo "Please provide the function name: FUNCTION_NAME"
+  exit
+fi
+
+if [ -z "$PROJECT_ID" ]; then
+  echo "Please provide the project ID: PROJECT_ID"
+  exit
+fi
+
+if [ -z "$GROUP_ME_BOT_ID" ]; then
+  echo "Please provide the GroupMe bot ID: GROUP_ME_BOT_ID"
+  exit
+fi
+
+deploy_command="gcloud functions deploy $FUNCTION_NAME --runtime python37 --trigger-http --project $PROJECT_ID --set-env-vars GROUP_ME_BOT_ID=$GROUP_ME_BOT_ID"
+
+echo "$deploy_command"
+
+$deploy_command
