@@ -2,6 +2,7 @@ import json
 import re
 from typing import List, Optional
 
+from bot.dad_joke import get_dad_joke
 from chat_provider import ChatProvider
 
 
@@ -11,11 +12,11 @@ class BotConfig:
     @staticmethod
     def from_json_file(path):
         with open(path) as json_file:
-            data = json.load(json_file)
+            commands = json.load(json_file)
             bot_config = BotConfig()
 
             # TODO - add validation
-            bot_config.commands = data['commands']
+            bot_config.commands = commands
 
             return bot_config
 
@@ -35,10 +36,16 @@ class Bot:
 
     def __get_response(self, message: str) -> Optional[str]:
         # Remove non-alphanumeric characters and whitespaces
-        message_normalized = re.sub(r'[^\w]', ' ', message).strip()
+        message_normalized = re.sub(r'[^\w]', ' ', message).strip().lower()
 
         command = list(filter(lambda x: message_normalized in x['triggers'], self.config.commands))
         if len(command) == 0:
             return None
 
-        return command[0]['response']
+        response = command[0]['response']
+        if response['type'] == 'TEXT':
+            return response['value']
+        elif response['type'] == 'DAD_JOKE':
+            return get_dad_joke()
+        else:
+            raise ValueError(f'Unrecognizable type: {response["type"]}')

@@ -12,14 +12,15 @@ git clone git@github.com:PeppyS/simple-chat-bot.git
 cd simple-chat-bot
 
 # Create your bot configuration file
-echo '{
-  "commands": [
-    {
-      "triggers": ["yo", "sup", "whats up"],
-      "response": "Nothing much, you?"
+echo '[
+  {
+    "triggers": ["yo", "sup", "whats up"],
+    "response": {
+      "type": "TEXT",
+      "value": "Nothing much, you?"
     }
-  ]
-}' >> bot_config.json
+  }
+]' >> bot_config.json
 
 # Deploy your cloud function
 FUNCTION_NAME=handle_group_me_message PROJECT_ID=your-gcp-project-id GROUP_ME_BOT_ID=your-bot-id ./bin/deploy-gcp-function
@@ -28,15 +29,21 @@ FUNCTION_NAME=handle_group_me_message PROJECT_ID=your-gcp-project-id GROUP_ME_BO
 ## Bot Configuration
 Pretty dumb configuration file that takes a list of commands, containing a list of triggers and responses.
 ```json
-{
-  "commands": [
-    {
-      "triggers": ["yo", "sup", "whats up"],
-      "response": "Nothing much, you?"
+[
+  {
+    "triggers": ["yo", "sup", "whats up"],
+    "response": {
+      "type": "TEXT",
+      "value": "Nothing much, you?"
     }
-  ]
-}
-
+  },
+  {
+    "triggers": ["joke", "dad joke"],
+    "response": {
+      "type": "DAD_JOKE"
+    }
+  }
+]
 ```
 
-Hopefully this will eventually support more dynamic commands, like API calls.
+Hopefully this will eventually support other types of commands.
