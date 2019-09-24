@@ -11,11 +11,11 @@ class BotConfig:
     @staticmethod
     def from_json_file(path):
         with open(path) as json_file:
-            data = json.load(json_file)
+            commands = json.load(json_file)
             bot_config = BotConfig()
 
             # TODO - add validation
-            bot_config.commands = data['commands']
+            bot_config.commands = commands
 
             return bot_config
 
@@ -35,7 +35,7 @@ class Bot:
 
     def __get_response(self, message: str) -> Optional[str]:
         # Remove non-alphanumeric characters and whitespaces
-        message_normalized = re.sub(r'[^\w]', ' ', message).strip()
+        message_normalized = re.sub(r'[^\w]', ' ', message).strip().lower()
 
         command = list(filter(lambda x: message_normalized in x['triggers'], self.config.commands))
         if len(command) == 0:
