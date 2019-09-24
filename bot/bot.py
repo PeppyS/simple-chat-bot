@@ -2,6 +2,7 @@ import json
 import re
 from typing import List, Optional
 
+from bot.dad_joke import get_dad_joke
 from chat_provider import ChatProvider
 
 
@@ -41,4 +42,10 @@ class Bot:
         if len(command) == 0:
             return None
 
-        return command[0]['response']
+        response = command[0]['response']
+        if response['type'] == 'TEXT':
+            return response['value']
+        elif response['type'] == 'DAD_JOKE':
+            return get_dad_joke()
+        else:
+            raise ValueError(f'Unrecognizable type: {response["type"]}')

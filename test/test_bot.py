@@ -6,7 +6,7 @@ from bot import BotConfig, Bot
 
 
 class TestBotConfig(unittest.TestCase):
-    commands = [{'triggers': ['bot test'], 'response': 'sup'}]
+    commands = [{'triggers': ['bot test'], 'response': {'type': 'TEXT', 'value': 'sup'}}]
 
     @patch("builtins.open", new_callable=mock_open,
            read_data=json.dumps(commands))
@@ -22,7 +22,7 @@ class TestBot(unittest.TestCase):
         bot_config = BotConfig()
         command = {
             'triggers': ['test trigger 1', 'test trigger 2'],
-            'response': 'sup'
+            'response': {'type': 'TEXT', 'value': 'sup'}
         }
         bot_config.commands = [command]
         chat_provider = unittest.mock.Mock()
@@ -38,5 +38,5 @@ class TestBot(unittest.TestCase):
 
         for trigger in command['triggers']:
             response = bot.handle_message(trigger)
-            self.assertEqual(response, command['response'])
+            self.assertEqual(response, command['response']['value'])
             chat_provider.send_message.assert_called_with(response)
