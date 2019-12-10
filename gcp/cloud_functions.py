@@ -1,12 +1,9 @@
 from flask import Request, jsonify
-import os
-from bot import BotConfig, Bot
-from chat_provider.group_me import GroupMeClient, GroupMeWebhookMessage
+from bot import Bot
+from chat_provider.chat_provider import ChatProviderSource
+from chat_provider.group_me import GroupMeWebhookMessage
 
-# TODO - Validate bot_config.json exists and env GROUP_ME_BOT_ID is set
-bot_config = BotConfig.from_json_file(path='bot_config.json')
-group_me_client = GroupMeClient(bot_id=os.getenv('GROUP_ME_BOT_ID'))
-bot = Bot(config=bot_config, chat_provider=group_me_client)
+bot = Bot(config_path='bot_config.json', chat_provider=ChatProviderSource.GroupMe)
 
 
 def handle_group_me_message(request: Request):

@@ -1,30 +1,16 @@
-import json
 import re
-from typing import List, Optional
+from typing import Optional
 
 from bot.dad_joke import get_dad_joke
+from bot.config import BotConfig, ResponseType
 from chat_provider import ChatProvider
-
-
-class BotConfig:
-    commands: List
-
-    @staticmethod
-    def from_json_file(path):
-        with open(path) as json_file:
-            commands = json.load(json_file)
-            bot_config = BotConfig()
-
-            # TODO - add validation
-            bot_config.commands = commands
-
-            return bot_config
+from chat_provider.chat_provider import ChatProviderSource
 
 
 class Bot:
-    def __init__(self, config: BotConfig, chat_provider: ChatProvider):
-        self.config = config
-        self.chat_provider = chat_provider
+    def __init__(self, config_path: str, chat_provider: ChatProviderSource):
+        self.config = BotConfig.from_json_file(config_path)
+        self.chat_provider = ChatProvider.get_client(provider=chat_provider)
 
     def handle_message(self, message: str) -> Optional[str]:
         response = self.__get_response(message)
@@ -38,14 +24,14 @@ class Bot:
         # Remove non-alphanumeric characters and whitespaces
         message_normalized = re.sub(r'[^\w]', ' ', message).strip().lower()
 
-        command = list(filter(lambda x: message_normalized in x['triggers'], self.config.commands))
+        command = list(filter(lambda x: message_normalized in x.triggers, self.config.commands))
         if len(command) == 0:
             return None
 
-        response = command[0]['response']
-        if response['type'] == 'TEXT':
-            return response['value']
-        elif response['type'] == 'DAD_JOKE':
+        response = command[0].response
+        if response.type == ResponseType.Text:
+            return response.type
+        elif response.type == ResponseType.DadJoke:
             return get_dad_joke()
         else:
-            raise ValueError(f'Unrecognizable type: {response["type"]}')
+            raise ValueError(f'Unrecognizable type: {response.type}')
