@@ -3,8 +3,7 @@ from typing import Optional
 
 from bot.dad_joke import get_dad_joke
 from bot.config import BotConfig, ResponseType
-from chat_provider import ChatProvider
-from chat_provider.chat_provider import ChatProviderSource
+from chat_provider.chat_provider import ChatProvider, ChatProviderSource
 
 
 class Bot:
@@ -29,9 +28,9 @@ class Bot:
             return None
 
         response = command[0].response
-        if response.type == ResponseType.Text:
-            return response.type
-        elif response.type == ResponseType.DadJoke:
+        if response.type == ResponseType.TEXT:
+            return response.value
+        elif response.type == ResponseType.DAD_JOKE:
             return get_dad_joke()
         else:
             raise ValueError(f'Unrecognizable type: {response.type}')

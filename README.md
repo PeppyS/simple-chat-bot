@@ -1,4 +1,4 @@
-# simple-chat-bot
+# chatty
 Currently only supports GroupMe and Google Cloud Functions.
 
 ## Prerequisites
@@ -8,8 +8,8 @@ Currently only supports GroupMe and Google Cloud Functions.
 ## Setup
 ```shell
 # Clone and go to directory
-git clone git@github.com:PeppyS/simple-chat-bot.git
-cd simple-chat-bot
+git clone git@github.com:PeppyS/chatty.git
+cd chatty
 
 # Create your bot configuration file
 echo '[
